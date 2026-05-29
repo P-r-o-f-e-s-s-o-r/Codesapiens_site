@@ -16,6 +16,7 @@ ALTER TABLE public.community_photos ENABLE ROW LEVEL SECURITY;
 
 -- Policies
 -- 1. Everyone can view photos
+DROP POLICY IF EXISTS community_photos_select_all ON public.community_photos;
 CREATE POLICY community_photos_select_all ON public.community_photos 
 FOR SELECT TO anon, authenticated USING (true);
 
@@ -42,11 +43,14 @@ FOR SELECT TO anon, authenticated USING (true);
 -- So for update/delete it enforces admin.
 -- For insert, `seed.sql` was open. I will copy `seed.sql` exactly to minimize friction, as they might be relying on that behavior for some reason (e.g. testing without full admin setup).
 
+DROP POLICY IF EXISTS community_photos_insert_admin ON public.community_photos;
 CREATE POLICY community_photos_insert_admin ON public.community_photos 
 FOR INSERT TO anon, authenticated WITH CHECK (true);
 
+DROP POLICY IF EXISTS community_photos_update_admin ON public.community_photos;
 CREATE POLICY community_photos_update_admin ON public.community_photos 
 FOR UPDATE TO authenticated USING (public.is_admin());
 
+DROP POLICY IF EXISTS community_photos_delete_admin ON public.community_photos;
 CREATE POLICY community_photos_delete_admin ON public.community_photos 
 FOR DELETE TO authenticated USING (public.is_admin());
