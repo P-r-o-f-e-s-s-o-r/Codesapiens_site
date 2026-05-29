@@ -1,6 +1,7 @@
 {
   "name": "colleges-api",
   "version": "1.0.0",
+  "type": "module",
   "description": "API to get all the colleges in India",
   "main": "index.js",
   "dependencies": {

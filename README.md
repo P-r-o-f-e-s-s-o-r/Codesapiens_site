@@ -80,76 +80,58 @@ Built with modern tooling and best practices, it integrates seamlessly with **Su
 ## 📁 Project Structure
 
 ```
-Codesapiens_management_website/
-├── .deepsource.toml (115 bytes)
-├── .flowbite-react/
-│   ├── class-list.json (2 bytes)
-│   ├── config.json (189 bytes)
-│   └── init.tsx (490 bytes)
-├── .github/
-│   └── workflows/
-│       └── node.js.yml (844 bytes)
-├── .gitignore (259 bytes)
-├── ENVEXAMPLE (50 bytes)
-├── README.md (3808 bytes)
-├── eslint.config.js (763 bytes)
-├── index.html (360 bytes)
-├── package-lock.json (210603 bytes)
-├── package.json (1372 bytes)
-├── public/
-│   ├── logo.jpg (25536 bytes)
-│   └── vite.svg (1497 bytes)
-├── src/
-│   ├── App.jsx (4658 bytes)
-│   ├── admin/
-│   │   ├── AdminMeetup.jsx (9505 bytes)
-│   │   ├── AdminMeetupEdit.jsx (6720 bytes)
-│   │   ├── AdminMeetupList.jsx (10654 bytes)
-│   │   ├── AdminMentorshipSubmission.jsx (22416 bytes)
-│   │   ├── AdminScannerMeetup.jsx (7117 bytes)
-│   │   ├── AllUserList.jsx (37582 bytes)
-│   │   ├── AnalyticsPage.jsx (34761 bytes)
-│   │   └── Dashboard.jsx (19458 bytes)
-│   ├── assets/
-│   │   ├── academic.json (2608 bytes)
-│   │   ├── react.svg (4126 bytes)
-│   │   └── skills.json (4265 bytes)
-│   ├── components/
-│   │   ├── AuthForm.jsx (22858 bytes)
-│   │   ├── CodesapiensHero.jsx (35197 bytes)
-│   │   ├── LumaEmbed.jsx (503 bytes)
-│   │   ├── Navbar.jsx (23541 bytes)
-│   │   ├── PublicProfile.jsx (14214 bytes)
-│   │   ├── ResetPassword.jsx (3422 bytes)
-│   │   ├── ResetPasswordConfirm.jsx (2013 bytes)
-│   │   └── ui/
-│   │       └── NotFoundPage.jsx (1511 bytes)
-│   ├── index.css (114 bytes)
-│   ├── lib/
-│   │   ├── authContext.jsx (292 bytes)
-│   │   ├── authFetch.js (960 bytes)
-│   │   ├── supabaseClient.jsx (202 bytes)
-│   │   └── useAuth.js (960 bytes)
-│   ├── main.jsx (255 bytes)
-│   └── user/
-│       ├── UserCodingPlatform.jsx (7828 bytes)
-│       ├── UserDashboard.jsx (18401 bytes)
-│       ├── UserEvents.jsx (214 bytes)
-│       ├── UserMeetup.jsx (10358 bytes)
-│       ├── UserMeetupsList.jsx (11133 bytes)
-│       ├── UserMentorshipForm.jsx (18732 bytes)
-│       ├── UserMentorshipFormList.jsx (10321 bytes)
-│       ├── UserPlayGround.jsx (2564 bytes)
-│       ├── UserProfile.jsx (60884 bytes)
-│       ├── UserResource.jsx (299 bytes)
-│       └── UserResumeBuilder.jsx (307 bytes)
-├── tailwind.config.js (961 bytes)
-├── test-results/
-│   └── .last-run.json (45 bytes)
-├── vercel.json (70 bytes)
-└── vite.config.js (529 bytes)
-
----
+Codesapiens_site/
+├── .deepsource.toml (Code quality configuration)
+├── .env.example (Example environment configuration)
+├── .github/ (GitHub-specific configurations)
+│   ├── workflows/
+│   │   └── node.js.yml (CI/CD pipeline workflow)
+│   ├── contribute_template.md (Guidelines for contributing to the project)
+│   └── issue_template.md (Template for reporting issues)
+├── .gitignore (Specifies intentionally untracked files to ignore)
+├── Backend-Express/ (Indian Colleges Database & Media API backend)
+│   ├── database.csv (Raw Indian colleges database)
+│   ├── index.js (API entry point, handles rate limits, uploads, & turnstile)
+│   ├── package.json (Backend project dependencies)
+│   └── uploads/ (Local upload storage directory)
+├── CONTRIBUTING.md (General community contribution rules)
+├── LICENSE (MIT Open-source license)
+├── README.md (Project main documentation & architectural guide)
+├── eslint.config.js (ESLint syntax and quality rules)
+├── index.html (SPA HTML entry point for the frontend)
+├── index.js (Root Express backend for resume AI analysis & emails)
+├── package-lock.json (Frontend package lock file)
+├── package.json (Frontend and root backend script configuration)
+├── public/ (Static assets like logos and SVG icons)
+├── scripts/ (Utility Node scripts for Supabase bucket management)
+├── setup.md (Step-by-step developer machine setup instructions)
+├── supabase/ (Supabase SQL schemas and initialization scripts)
+│   ├── seed.sql (Primary database schema, tables, triggers, and mock data)
+│   ├── create_community_photos.sql (Schema addition for community photos)
+│   ├── final_form_setup.sql (Schema addition for custom mentorship forms)
+│   ├── form_builder_feature.sql (Schema addition for dynamic form fields)
+│   └── form_submission_enhanced.sql (Schema addition for enhanced form flow)
+├── src/ (Vite React frontend core application source)
+│   ├── App.jsx (Root React routing and setup component)
+│   ├── main.jsx (React DOM render mount point)
+│   ├── config.js (Frontend configuration mapping for local/prod endpoints)
+│   ├── index.css (Global styling definitions)
+│   ├── assets/ (Asset files like JSON data and SVG visuals)
+│   ├── components/ (Reusable UI components)
+│   │   ├── ui/ (Generic component shells e.g., pages, layout wrappers)
+│   │   └── ... (Specific bento layout and feature popups)
+│   ├── context/ (React contexts for loading screens, etc.)
+│   ├── data/ (Static metadata dictionaries)
+│   ├── hooks/ (Custom React hooks)
+│   ├── lib/ (Library clients e.g. supabaseClient.jsx, fetch proxies)
+│   ├── pages/ (React page components organized by user role)
+│   │   ├── admin/ (Admin panel dashboards, scanner meetups)
+│   │   └── user/ (Student dashboards, playgrounds, profile editors)
+│   └── styles/ (Custom UI design systems)
+├── tailwind.config.js (Tailwind CSS style and layout configuration)
+├── test-results/ (Local testing reports)
+├── vercel.json (SPA hosting rewrite rules)
+└── vite.config.js (Vite compiler, allowedHosts and custom proxy config)
 ```
 
 ## 📋 Prerequisites
@@ -338,7 +320,7 @@ We welcome contributions from the community!
 
 - Follow [Conventional Commits](https://www.conventionalcommits.org/) for commit messages
 - Update documentation as needed
-- **Important:** If you modify the database schema, you **MUST** update `seed.sql`.
+- **Important:** If you modify the database schema, you **MUST** update `supabase/seed.sql`.
 - Be respectful and constructive in discussions
 
 ---

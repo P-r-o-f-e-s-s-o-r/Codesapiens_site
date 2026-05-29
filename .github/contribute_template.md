@@ -23,10 +23,10 @@ Thank you for your interest in contributing to our project! We welcome contribut
 
 ### ⚠️ Important: Database Modifications
 
-If you make **ANY** modification to the database schema (e.g., adding tables, columns, or changing constraints), you **MUST** update the `seed.sql` file to reflect these changes.
+If you make **ANY** modification to the database schema (e.g., adding tables, columns, or changing constraints), you **MUST** update the `supabase/seed.sql` file to reflect these changes.
 
-*   **File Path:** `seed.sql`
-*   **Action:** Add the corresponding SQL commands to recreate the schema changes in `seed.sql`.
+*   **File Path:** `supabase/seed.sql`
+*   **Action:** Add the corresponding SQL commands to recreate the schema changes in `supabase/seed.sql`.
 *   **Reason:** This ensures that new environments can be initialized with the correct database structure.
 
 ## Submitting a Pull Request

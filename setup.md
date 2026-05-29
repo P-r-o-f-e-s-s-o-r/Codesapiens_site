@@ -66,14 +66,14 @@ This step is crucial for the application to function correctly.
 
 1.  Go to your Supabase project dashboard.
 2.  Open the **SQL Editor** from the sidebar.
-3.  Open the `seed.sql` file from this project's root directory.
-4.  Copy the entire content of `seed.sql`.
+3.  Open the `seed.sql` file from this project's `supabase/` directory.
+4.  Copy the entire content of `supabase/seed.sql`.
 5.  Paste it into the Supabase SQL Editor.
 6.  Click **Run**.
 
 This will create all the necessary tables, triggers, and initial data.
 
-**Important:** If you modify the database schema during development, remember to update `seed.sql`!
+**Important:** If you modify the database schema during development, remember to update `supabase/seed.sql`!
 
 ### 5. Start the Development Server
 
@@ -87,7 +87,7 @@ The application should be running at `http://localhost:5173`.
 
 ## Troubleshooting
 
--   **"Relation does not exist" error**: Ensure you have run the `seed.sql` script in Supabase.
+-   **"Relation does not exist" error**: Ensure you have run the `supabase/seed.sql` script in Supabase.
 -   **Auth errors**: Verify your Supabase URL and keys in `.env.local`.
 -   **Image upload fails**: Check your Cloudinary credentials.
 
