@@ -728,7 +728,7 @@ const CodeSapiensHero = () => {
                             <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-800 group transition-transform duration-500">
                                 <div className="absolute inset-0 bg-gradient-to-tr from-[#0061FE]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
                                 <img
-                                    src="https://res.cloudinary.com/dqudvximt/image/upload/v1771005975/Gemini_Generated_Image_il0qzjil0qzjil0q_1_cfh7ix.png"
+                                    src="/logo.jpg"
                                     alt="CodeSapiens Dashboard"
                                     className="w-full h-auto object-cover"
                                 />
@@ -881,44 +881,61 @@ const CodeSapiensHero = () => {
                 </div>
             </section>
 
-            {/* Team / Mafia Gang */}
+            {/* Team / Core Team */}
             <section id="community" className="py-8 md:py-16 bg-[#F7F5F2] text-[#1E1919]">
-                <div className="container mx-auto px-6 text-center">
-                    <span className="text-[#0061FE] font-bold tracking-widest uppercase text-xs md:text-sm text-golden-1 mb-2 block">Community</span>
-                    <h2 className="text-2xl md:text-4xl text-golden-2 md:text-golden-3 font-bold mb-3">The Mafia Gang</h2>
-                    <p className="text-golden-1 text-gray-600 text-sm md:text-base max-w-2xl mx-auto mb-8">
-                        Meet the core members who run the community. We are students, just like you.
-                    </p>
+                <div className="container mx-auto px-6">
+                    <div className="text-center mb-10">
+                        <span className="text-[#0061FE] font-bold tracking-widest uppercase text-xs md:text-sm text-golden-1 mb-2 block">Community</span>
+                        <h2 className="text-2xl md:text-4xl text-golden-2 md:text-golden-3 font-bold mb-3">Core Team</h2>
+                        <p className="text-golden-1 text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
+                            Meet the core members who run the community. We are students, just like you.
+                        </p>
+                    </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-y-6 gap-x-2 md:gap-x-4">
-                        {/* Founder */}
-                        <div className="col-span-2 md:col-span-1 flex flex-col items-center group">
-                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mb-3 border-4 border-[#FA5D00] shadow-lg group-hover:scale-105 transition-transform">
-                                <img src="https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/1679197646322_n1svjq_s5w42a.jpg" alt="Thiyaga B" className="w-full h-full object-cover" />
-                            </div>
-                            <h3 className="font-bold text-golden-2 mb-0.5 text-sm md:text-base">Thiyaga B</h3>
-                            <p className="text-[#FA5D00] text-golden-1 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-1">Founder</p>
-                            <a href="https://www.linkedin.com/in/thiyagab/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0061FE] transition-colors"><Linkedin size={14} /></a>
+                    {/* Founder */}
+                    <div className="flex flex-col items-center mb-12">
+                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mb-3 border-4 border-[#FA5D00] shadow-lg hover:scale-105 transition-transform">
+                            <img src="https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/1679197646322_n1svjq_s5w42a.jpg" alt="Thiyaga B" className="w-full h-full object-cover" />
                         </div>
-                        {volunteers.map((vol, i) => (
-                            <motion.div
-                                key={i}
-                                initial={{ opacity: 0, scale: 0.8 }}
-                                whileInView={{ opacity: 1, scale: 1 }}
-                                transition={{ delay: i * 0.05 }}
-                                className="flex flex-col items-center group"
-                            >
-                                <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden mb-2 grayscale group-hover:grayscale-0 transition-all duration-500 border-2 border-transparent group-hover:border-[#0061FE] shadow-md">
-                                    <img src={vol.photo} alt={vol.name} className="w-full h-full object-cover" />
+                        <h3 className="font-bold text-golden-2 mb-0.5 text-sm md:text-base">Thiyaga B</h3>
+                        <p className="text-[#FA5D00] text-golden-1 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-1">Founder</p>
+                        <a href="https://www.linkedin.com/in/thiyagab/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0061FE] transition-colors"><Linkedin size={14} /></a>
+                    </div>
+
+                    {/* Previous Team */}
+                    <div className="border-t border-gray-300/60 pt-10">
+                        <div className="flex flex-col md:flex-row items-start gap-6 md:gap-8">
+                            {/* Left Header */}
+                            <div className="md:w-1/4 text-left">
+                                <h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Previous Team</h3>
+                                <p className="text-xs md:text-sm text-gray-500 mt-1">Contributors & past core members who built CodeSapiens.</p>
+                            </div>
+
+                            {/* Right Grid */}
+                            <div className="md:w-3/4 w-full">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-6 gap-x-2 md:gap-x-4">
+                                    {volunteers.map((vol, i) => (
+                                        <motion.div
+                                            key={i}
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            whileInView={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: i * 0.05 }}
+                                            className="flex flex-col items-center group text-center"
+                                        >
+                                            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden mb-2 grayscale group-hover:grayscale-0 transition-all duration-500 border-2 border-transparent group-hover:border-[#0061FE] shadow-md">
+                                                <img src={vol.photo} alt={vol.name} className="w-full h-full object-cover" />
+                                            </div>
+                                            <h3 className="font-bold text-golden-1 mb-0.5 text-xs md:text-sm">{vol.name}</h3>
+                                            {vol.link && (
+                                                <a href={vol.link} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0061FE] transition-colors mt-1">
+                                                    <Linkedin size={12} />
+                                                </a>
+                                            )}
+                                        </motion.div>
+                                    ))}
                                 </div>
-                                <h3 className="font-bold text-golden-1 mb-0.5 text-xs md:text-sm">{vol.name}</h3>
-                                {vol.link && (
-                                    <a href={vol.link} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0061FE] transition-colors mt-1">
-                                        <Linkedin size={12} />
-                                    </a>
-                                )}
-                            </motion.div>
-                        ))}
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
