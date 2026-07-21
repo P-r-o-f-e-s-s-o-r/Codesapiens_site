@@ -1,11 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import { supabase } from '../lib/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, ChevronDown, Menu, X, Github, Linkedin, Youtube, Users, Calendar, Code, Award, Crown, Rocket, Zap, Globe, Cpu, Handshake, Heart, ArrowUpRight, Instagram, Twitter, MessageCircle, Megaphone, Sparkles } from 'lucide-react';
 import { BACKEND_URL } from '../config';
 import { authFetch } from '../lib/authFetch';
 import LandingPopup from './LandingPopup';
+
+// --- Animated Count Up Component ---
+const CountUpTo = ({ end, duration = 2, suffix = '+' }) => {
+    const [count, setCount] = useState(0);
+    const ref = useRef(null);
+    const isInView = useInView(ref, { amount: 0.3 });
+
+    useEffect(() => {
+        if (isInView) {
+            let start = 0;
+            const endNum = parseInt(end, 10);
+            if (isNaN(endNum)) return;
+            const totalSteps = 50;
+            const stepTime = (duration * 1000) / totalSteps;
+            const increment = endNum / totalSteps;
+
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= endNum) {
+                    setCount(endNum);
+                    clearInterval(timer);
+                } else {
+                    setCount(Math.floor(start));
+                }
+            }, stepTime);
+
+            return () => clearInterval(timer);
+        } else {
+            setCount(0);
+        }
+    }, [isInView, end, duration]);
+
+    return <span ref={ref}>{count}{suffix}</span>;
+};
 
 // --- Stats Section ---
 const StatsSection = () => {
@@ -25,13 +59,17 @@ const StatsSection = () => {
     }, []);
 
     return (
-        <section className="py-12 bg-gradient-to-br from-[#101010] via-[#050505] to-[#001a45] text-white relative overflow-hidden">
-            {/* Background Elements */}
-
+        <section className="py-12 bg-gradient-to-br from-[#101010] via-[#050505] to-[#052005] text-white relative overflow-hidden">
             <div className="container mx-auto px-4 md:px-6 relative z-10">
                 <div className="mb-8 text-center">
-                    <span className="text-[#0061FE] font-bold tracking-widest uppercase text-golden-1 mb-4 block">Impact</span>
-                    <h2 className="text-golden-2 md:text-golden-3 font-bold mb-6">By The Numbers</h2>
+                    <span className="text-[#00FF00] font-bold tracking-widest uppercase text-golden-1 mb-4 block drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">Impact</span>
+                    <motion.h2
+                        initial={{ opacity: 0, y: 15 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        className="text-golden-2 md:text-golden-3 font-bold mb-6"
+                    >
+                        By The Numbers
+                    </motion.h2>
                     <p className="text-golden-1 text-gray-400 max-w-2xl mx-auto">
                         We are growing fast. Join the movement.
                     </p>
@@ -44,41 +82,34 @@ const StatsSection = () => {
                         <motion.div
                             initial={{ opacity: 0, scale: 0.5 }}
                             whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            className="bg-black/40 backdrop-blur-3xl p-4 md:p-6 rounded-2xl border border-white/10 text-center shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] relative overflow-hidden group"
+                            className="bg-black/40 backdrop-blur-3xl p-4 md:p-6 rounded-2xl border border-[#00FF00]/30 text-center shadow-[0_8px_32px_0_rgba(0,255,0,0.15)] relative overflow-hidden group"
                         >
-                            {/* Specular Highlight */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#00FF00]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
-                            <h3 className="text-golden-2 md:text-golden-3 font-black text-white mb-2 drop-shadow-lg">
-                                {/* {stats.totalUsers > 0 ? stats.totalUsers : "1500+"} */}
-                                2000+
+                            <h3 className="text-golden-2 md:text-golden-3 font-black text-[#00FF00] mb-2 drop-shadow-[0_0_12px_rgba(0,255,0,0.6)]">
+                                <CountUpTo end={stats.totalUsers > 0 ? stats.totalUsers : 2000} suffix="+" />
                             </h3>
-                            <p className="text-gray-400 font-medium uppercase tracking-normal md:tracking-wider text-golden-1">Total Members</p>
+                            <p className="text-gray-300 font-medium uppercase tracking-normal md:tracking-wider text-golden-1">Total Members</p>
                         </motion.div>
 
                         <motion.div
                             initial={{ opacity: 0, scale: 0.5 }}
                             whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
                             transition={{ delay: 0.1 }}
-                            className="bg-black/40 backdrop-blur-3xl p-4 md:p-6 rounded-2xl border border-white/10 text-center shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] relative overflow-hidden group"
+                            className="bg-black/40 backdrop-blur-3xl p-4 md:p-6 rounded-2xl border border-[#00FF00]/30 text-center shadow-[0_8px_32px_0_rgba(0,255,0,0.15)] relative overflow-hidden group"
                         >
-                            {/* Specular Highlight */}
-                            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                            <div className="absolute inset-0 bg-gradient-to-br from-[#00FF00]/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
 
-                            <h3 className="text-golden-2 md:text-golden-3 font-black text-white mb-2 drop-shadow-lg">
-                                {/* {stats.totalColleges > 0 ? stats.totalColleges : "50+"} */}
-                                50+
+                            <h3 className="text-golden-2 md:text-golden-3 font-black text-[#00FF00] mb-2 drop-shadow-[0_0_12px_rgba(0,255,0,0.6)]">
+                                <CountUpTo end={stats.totalColleges > 0 ? stats.totalColleges : 50} suffix="+" />
                             </h3>
-                            <p className="text-gray-400 font-medium uppercase tracking-normal md:tracking-wider text-golden-1">Colleges Reached</p>
+                            <p className="text-gray-300 font-medium uppercase tracking-normal md:tracking-wider text-golden-1">Colleges Reached</p>
                         </motion.div>
                     </div>
 
                     {/* Right: Top Colleges Chart */}
                     <div className="col-span-1 h-full w-full overflow-hidden">
                         <div className="bg-black/40 backdrop-blur-3xl p-6 rounded-2xl border border-white/10 h-full flex flex-col relative overflow-hidden group shadow-[0_8px_32px_0_rgba(0,0,0,0.37)]">
-                            {/* Specular Highlight */}
                             <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none"></div>
 
                             <h4 className="text-golden-2 font-bold mb-4 flex items-center gap-3">
@@ -90,7 +121,6 @@ const StatsSection = () => {
                                     <div className="text-center text-gray-500 py-10 animate-pulse">Loading leaderboards...</div>
                                 ) : stats.topColleges.filter(c => c.name && c.name !== "Not specified").length > 0 ? (
                                     <div className="space-y-8">
-                                        {/* Top 3 Podium - Only show if we have enough data, else fallback to list */}
                                         {stats.topColleges.filter(c => c.name && c.name !== "Not specified").length >= 3 ? (
                                             <div className="flex items-end justify-center gap-2 md:gap-4 mb-4 min-h-[140px]">
                                                 {/* 2nd Place */}
@@ -159,7 +189,7 @@ const StatsSection = () => {
                                         <div className="space-y-3 mt-4">
                                             {stats.topColleges
                                                 .filter(c => c.name && c.name !== "Not specified")
-                                                .slice(stats.topColleges.filter(c => c.name && c.name !== "Not specified").length >= 3 ? 3 : 0, 5) // Skip top 3 if we showed podium, else show all
+                                                .slice(stats.topColleges.filter(c => c.name && c.name !== "Not specified").length >= 3 ? 3 : 0, 5)
                                                 .map((college, index) => {
                                                     const actualIndex = stats.topColleges.filter(c => c.name && c.name !== "Not specified").length >= 3 ? index + 3 : index;
                                                     return (
@@ -176,7 +206,7 @@ const StatsSection = () => {
                                                             <div className="flex-1 min-w-0">
                                                                 <h5 className="font-medium text-gray-200 truncate">{college.name}</h5>
                                                             </div>
-                                                            <div className="px-3 py-1 rounded-full bg-[#0061FE]/10 text-[#0061FE] text-xs font-bold">
+                                                            <div className="px-3 py-1 rounded-full bg-[#00FF00]/15 text-[#00FF00] text-xs font-bold">
                                                                 {college.count}
                                                             </div>
                                                         </motion.div>
@@ -201,7 +231,6 @@ const StatsSection = () => {
 // --- Sponsor Section with Spotlight Effect ---
 const SponsorSection = () => {
     const sponsors = [
-
         {
             name: "Mako IT Lab",
             link: "https://www.makoitlab.com/",
@@ -232,21 +261,23 @@ const SponsorSection = () => {
             link: "https://interviewbuddy.net/",
             image: "https://res.cloudinary.com/dqudvximt/image/upload/v1771508422/WhatsApp_Image_2026-02-19_at_4.28.12_PM_xxalgw.jpg",
         },
-        
     ];
 
     return (
         <section className="py-12 bg-[#FFFFF0] relative overflow-hidden">
             <div className="container mx-auto px-6 relative z-10">
                 <div className="text-left mb-8">
-                    <div className="flex items-center gap-2 mb-4">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-2 mb-4"
+                    >
                         <h2 className="text-4xl md:text-6xl font-black text-black tracking-tight leading-none">OUR</h2>
-                        <h2 className="text-4xl md:text-6xl font-script text-[#2563ea] font-bold italic leading-none pt-2">sponsors</h2>
+                        <h2 className="text-4xl md:text-6xl font-script text-[#00FF00] font-bold italic leading-none pt-2 drop-shadow-[0_0_10px_rgba(0,255,0,0.5)]">sponsors</h2>
                         <div className="h-px bg-gray-200 flex-1 ml-4 self-center mt-2"></div>
-                    </div>
-                    {/* <span className="text-[#0061FE] font-bold tracking-widest uppercase text-golden-1 mb-2 block">Our Partners</span> */}
+                    </motion.div>
                     <div className="flex items-center gap-2 mb-8">
-                        <span className="w-3 h-3 rounded-full bg-green-400 animate-pulse"></span>
+                        <span className="w-3 h-3 rounded-full bg-[#00FF00] animate-pulse"></span>
                         <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">BACKING THE FUTURE</span>
                     </div>
                 </div>
@@ -260,12 +291,10 @@ const SponsorSection = () => {
                             rel="noopener noreferrer"
                             className="relative group bg-white border border-gray-100 rounded-3xl p-4 md:p-6 w-full aspect-square flex flex-col justify-between hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 block"
                         >
-                            {/* Top Right Arrow */}
-                            <div className="self-end p-2 bg-gray-50 rounded-full text-gray-400 group-hover:bg-[#0061FE] group-hover:text-white transition-colors">
+                            <div className="self-end p-2 bg-gray-50 rounded-full text-gray-400 group-hover:bg-[#00FF00] group-hover:text-black transition-colors">
                                 <ArrowUpRight size={18} />
                             </div>
 
-                            {/* Centered Image */}
                             <div className="flex-1 flex items-center justify-center p-2">
                                 <img
                                     src={sponsor.image}
@@ -274,7 +303,6 @@ const SponsorSection = () => {
                                 />
                             </div>
 
-                            {/* Name Badge */}
                             <div className="self-start px-3 py-1 bg-gray-50 border border-gray-100 rounded-lg">
                                 <span className="font-bold text-gray-800 text-xs">{sponsor.name}</span>
                             </div>
@@ -285,10 +313,6 @@ const SponsorSection = () => {
         </section>
     );
 };
-
-
-
-
 
 // --- Community Partners Section ---
 const CommunityPartners = () => {
@@ -311,13 +335,17 @@ const CommunityPartners = () => {
         <section className="py-12 bg-white relative overflow-hidden border-t border-gray-100">
             <div className="container mx-auto px-6 relative z-10">
                 <div className="text-left mb-8">
-                    <div className="flex items-center gap-2 mb-4">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-2 mb-4"
+                    >
                         <h2 className="text-3xl md:text-6xl font-black text-black tracking-tight leading-none">COMMUNITY</h2>
-                        <h2 className="text-3xl md:text-6xl font-script text-[#2563ea] font-bold italic leading-none pt-2">partners</h2>
+                        <h2 className="text-3xl md:text-6xl font-script text-[#00FF00] font-bold italic leading-none pt-2 drop-shadow-[0_0_10px_rgba(0,255,0,0.5)]">partners</h2>
                         <div className="h-px bg-gray-200 flex-1 ml-4 self-center mt-2"></div>
-                    </div>
+                    </motion.div>
                     <div className="flex items-center gap-2 mb-8">
-                        <span className="w-3 h-3 rounded-full bg-green-400 animate-pulse"></span>
+                        <span className="w-3 h-3 rounded-full bg-[#00FF00] animate-pulse"></span>
                         <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">GROWING TOGETHER</span>
                     </div>
                 </div>
@@ -328,7 +356,6 @@ const CommunityPartners = () => {
                             key={idx}
                             className="relative group bg-white border border-gray-100 rounded-3xl p-4 md:p-6 w-full aspect-square flex flex-col justify-center items-center hover:shadow-lg transition-all duration-300"
                         >
-                            {/* Centered Image */}
                             <div className="flex-1 flex items-center justify-center p-2 w-full">
                                 <img
                                     src={partner.image}
@@ -429,7 +456,7 @@ const SocialMediaSection = () => {
         {
             name: "Volunteers Needed",
             icon: null,
-            link: "https://forms.gle/volunteer", // Placeholder link
+            link: "https://forms.gle/volunteer",
             color: "bg-black",
             textColor: "text-white",
             span: "col-span-1",
@@ -466,13 +493,17 @@ const SocialMediaSection = () => {
         <section className="py-20 bg-[#FAF9F6] relative overflow-hidden text-left">
             <div className="container mx-auto px-6 relative z-10">
                 <div className="text-left mb-8">
-                    <div className="flex items-center gap-2 mb-4">
+                    <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        className="flex items-center gap-2 mb-4"
+                    >
                         <h2 className="text-4xl md:text-6xl font-black text-black tracking-tight leading-none">SOCIAL</h2>
-                        <h2 className="text-4xl md:text-6xl font-script text-[#2563ea] font-bold italic leading-none pt-2">links</h2>
+                        <h2 className="text-4xl md:text-6xl font-script text-[#00FF00] font-bold italic leading-none pt-2 drop-shadow-[0_0_10px_rgba(0,255,0,0.5)]">links</h2>
                         <div className="h-px bg-gray-200 flex-1 ml-4 self-center mt-2"></div>
-                    </div>
+                    </motion.div>
                     <div className="flex items-center gap-2 mb-8">
-                        <Globe size={16} className="text-[#0061FE] animate-pulse" />
+                        <Globe size={16} className="text-[#00FF00] animate-pulse" />
                         <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">CONNECT WITH US</span>
                     </div>
                 </div>
@@ -491,17 +522,14 @@ const SocialMediaSection = () => {
                             className={`${social.span} ${social.color} ${social.textColor} ${social.border} rounded-3xl p-6 relative overflow-hidden group shadow-sm hover:shadow-xl flex flex-col justify-between transition-all`}
                             style={social.backgroundImage ? { backgroundImage: social.color.includes('gradient') ? social.color : undefined } : {}}
                         >
-                            {/* Custom Background Image if any */}
                             {social.backgroundImage && (
                                 <div className="absolute inset-0" style={{ background: social.backgroundImage }}></div>
                             )}
 
-                            {/* Top Right Arrow */}
                             <div className={`absolute top-4 right-4 p-2 rounded-full ${social.textColor === 'text-white' ? 'bg-white/20 text-white' : 'bg-gray-100 text-gray-500'} opacity-0 group-hover:opacity-100 transition-opacity`}>
                                 <ArrowUpRight size={16} />
                             </div>
 
-                            {/* Content */}
                             {social.customContent ? (
                                 social.customContent
                             ) : (
@@ -528,16 +556,14 @@ const SocialMediaSection = () => {
 
 
 // --- Notice Section (Call for Speakers/Sponsors) ---
-// --- Notice Section (Call for Speakers/Sponsors) ---
 const NoticeSection = () => {
     return (
         <section className="py-4 bg-[#FFF8DC] relative overflow-hidden text-left">
             <div className="container mx-auto px-6 relative z-10">
                 <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] gap-4 md:gap-8 items-center max-w-4xl mx-auto">
-                    {/* Title (Left Side on Desktop) */}
                     <div className="flex items-center gap-2 shrink-0">
                         <h2 className="text-xl md:text-2xl font-black text-black tracking-tight leading-none">LATEST</h2>
-                        <h2 className="text-xl md:text-2xl font-script text-[#2563ea] font-bold italic leading-none pt-1">updates</h2>
+                        <h2 className="text-xl md:text-2xl font-script text-[#00FF00] font-bold italic leading-none pt-1 drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">updates</h2>
                         <div className="h-px bg-gray-200 w-12 self-center mt-1 md:hidden"></div>
                     </div>
 
@@ -597,6 +623,17 @@ const CodeSapiensHero = () => {
     // Content for Sticky Scroll
 
 
+    const currentTeam = [
+        { photo: "/Organizers/Mukeshwar Raudra.png", name: "Mukeshwar Raudra", link: "https://www.linkedin.com/in/mukeshwar-raudra/" },
+        { photo: "/Organizers/Tazim sheriff.R.jpg", name: "Tazim sheriff.R", link: "https://www.linkedin.com/in/tazim-sheriff-r-15a355230/" },
+        { photo: "/Organizers/Giriprasad Karthi.jpg", name: "Giriprasad Karthi", link: "https://www.linkedin.com/in/girii73/" },
+        { photo: "/Organizers/Jayasri.jpg", name: "Jayasri", link: "https://www.linkedin.com/in/jayasri-s-ai/" },
+        { photo: "/Organizers/Harsha Vardhini.jpg", name: "Harsha Vardhini", link: "https://www.linkedin.com/in/harsha-vardhini-05783036a/" },
+        { photo: "/Organizers/Prince Kevin Karthik I.jpg", name: "Prince Kevin Karthik I", link: "https://www.linkedin.com/in/princek6/" },
+        { photo: "/Organizers/Sarvesh Sivasankaran.jpg", name: "Sarvesh Sivasankaran", link: "https://www.linkedin.com/in/sarvesh-sivasankaran/" },
+        { photo: "/Organizers/Priyanga Radhakrishnan.jpg", name: "Priyanga Radhakrishnan", link: "https://www.linkedin.com/in/priyanga-radhakrishnan-53b505380/" }
+    ];
+
     const volunteers = [
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122516/2ABMHfqOsrpoL3OV-WhatsApp202025-08-312010.33.52_a8a27bbd_vzcgzq_1_bm8zch.jpg", name: "Keerthana M G", link: "https://in.linkedin.com/in/keerthana-m-g-12ba59256" },
         { photo: "https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/iAckgTxMcALuPbEx-IMG-20250112-WA0012_1_fwyhoa_oxegdx.jpg", name: "Mahaveer A", link: "https://www.linkedin.com/in/mahaveer1013" },
@@ -611,7 +648,7 @@ const CodeSapiensHero = () => {
     ];
 
     return (
-        <div className="bg-[#F7F5F2] text-[#1E1919] min-h-screen font-sans overflow-x-hidden selection:bg-[#0061FE] selection:text-white">
+        <div className="bg-[#F7F5F2] text-[#1E1919] min-h-screen font-sans overflow-x-hidden selection:bg-[#00FF00] selection:text-black">
             {/* Navigation - Dark Mode for Hero */}
             <nav className="fixed top-0 w-full z-50 bg-[#101010]/90 backdrop-blur-md text-white border-b border-white/10">
                 <div className="container mx-auto px-6 py-6 flex justify-between items-center">
@@ -620,13 +657,13 @@ const CodeSapiensHero = () => {
                         <span className="text-xl font-bold tracking-tight">CodeSapiens</span>
                     </div>
                     <div className="hidden md:flex items-center gap-8 font-medium text-golden-1">
-                        <a href="#vision" className="hover:text-[#0061FE] transition-colors">Vision</a>
-                        <a href="/programs" className="hover:text-[#0061FE] transition-colors">Programs</a>
-                        <a href="/meetups" className="hover:text-[#0061FE] transition-colors">Meetups</a>
-                        <a href="#events" className="hover:text-[#0061FE] transition-colors">Events</a>
-                        <a href="#community" className="hover:text-[#0061FE] transition-colors">Community</a>
-                        <button onClick={() => navigate('/auth')} className="hover:text-[#0061FE]">Log in</button>
-                        <button onClick={() => navigate('/auth')} className="bg-white text-black px-5 py-2.5 rounded-sm hover:bg-gray-200 transition-colors font-bold">
+                        <a href="#vision" className="hover:text-[#00FF00] transition-colors">Vision</a>
+                        <a href="/programs" className="hover:text-[#00FF00] transition-colors">Programs</a>
+                        <a href="/meetups" className="hover:text-[#00FF00] transition-colors">Meetups</a>
+                        <a href="#events" className="hover:text-[#00FF00] transition-colors">Events</a>
+                        <a href="#community" className="hover:text-[#00FF00] transition-colors">Community</a>
+                        <button onClick={() => navigate('/auth')} className="hover:text-[#00FF00]">Log in</button>
+                        <button onClick={() => navigate('/auth')} className="bg-[#00FF00] text-black px-5 py-2.5 rounded-sm hover:bg-[#00e600] shadow-[0_0_15px_rgba(0,255,0,0.5)] transition-all font-bold">
                             Get Started
                         </button>
                     </div>
@@ -645,7 +682,7 @@ const CodeSapiensHero = () => {
                         <a href="/meetups" onClick={() => setIsMenuOpen(false)}>Meetups</a>
                         <a href="#events" onClick={() => setIsMenuOpen(false)}>Events</a>
                         <a href="#community" onClick={() => setIsMenuOpen(false)}>Community</a>
-                        <button onClick={() => navigate('/auth')} className="text-left text-[#0061FE]">Log in</button>
+                        <button onClick={() => navigate('/auth')} className="text-left text-[#00FF00]">Log in</button>
                     </div>
                 </div>
             )}
@@ -665,7 +702,7 @@ const CodeSapiensHero = () => {
                     <svg viewBox="0 0 800 800" className="w-full h-full md:w-full md:h-full opacity-40 md:opacity-60">
                         <motion.path
                             d="M400,200 L600,300 L400,400 L200,300 Z"
-                            fill="none" stroke="#0061FE" strokeWidth="1.5"
+                            fill="none" stroke="#00FF00" strokeWidth="1.5"
                             initial={{ pathLength: 0, opacity: 0 }}
                             animate={{ pathLength: 1, opacity: 1 }}
                             transition={{ duration: 2, ease: "easeInOut" }}
@@ -699,7 +736,7 @@ const CodeSapiensHero = () => {
                             className="max-w-4xl"
                         >
                             <h1 className="text-5xl md:text-7xl font-extrabold leading-[1] tracking-tighter mb-8 font-archivo-black">
-                                CodeSapiens<span className="text-[#0061FE]">.</span>
+                                CodeSapiens<span className="text-[#00FF00] drop-shadow-[0_0_15px_#00FF00]">.</span>
                             </h1>
                             <p className="text-golden-1 text-gray-400 max-w-2xl leading-relaxed mb-10 font-light">
                                 The Biggest Student-Run Tech Community in TN.<br />
@@ -711,10 +748,9 @@ const CodeSapiensHero = () => {
                                 </span>
                             </p>
                             <div className="flex flex-col sm:flex-row gap-6">
-                                <button onClick={() => navigate('/auth')} className="bg-[#0061FE] text-white px-8 py-4 text-golden-1 font-bold rounded-sm hover:bg-[#0050d6] transition-all flex items-center justify-center gap-3 group">
+                                <button onClick={() => navigate('/auth')} className="bg-[#00FF00] text-black font-extrabold px-8 py-4 text-golden-1 rounded-sm hover:bg-[#00e600] shadow-[0_0_20px_rgba(0,255,0,0.5)] hover:shadow-[0_0_35px_rgba(0,255,0,0.8)] transition-all flex items-center justify-center gap-3 group">
                                     Join Now <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                                 </button>
-
                             </div>
                         </motion.div>
 
@@ -726,7 +762,7 @@ const CodeSapiensHero = () => {
                             className="relative mt-12 lg:mt-0"
                         >
                             <div className="relative rounded-xl overflow-hidden shadow-2xl border border-gray-800 group transition-transform duration-500">
-                                <div className="absolute inset-0 bg-gradient-to-tr from-[#0061FE]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
+                                <div className="absolute inset-0 bg-gradient-to-tr from-[#00FF00]/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10 pointer-events-none"></div>
                                 <img
                                     src="/logo.jpg"
                                     alt="CodeSapiens Dashboard"
@@ -734,7 +770,7 @@ const CodeSapiensHero = () => {
                                 />
                             </div>
                             {/* Decorative Elements */}
-                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#0061FE] rounded-full blur-[80px] opacity-30"></div>
+                            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#00FF00] rounded-full blur-[80px] opacity-30"></div>
                             <div className="absolute -top-10 -left-10 w-40 h-40 bg-[#9B0032] rounded-full blur-[80px] opacity-30"></div>
 
                             {/* Badge Text */}
@@ -751,28 +787,33 @@ const CodeSapiensHero = () => {
                 </motion.div>
             </section>
 
-
-
             {/* Vision Section */}
             <section id="vision" className="bg-[#F7F5F2] text-[#1E1919] py-12 md:py-16 relative">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 h-32 w-px bg-gradient-to-b from-[#101010] to-[#0061FE]"></div>
                 <div className="container mx-auto px-6">
                     <div className="grid md:grid-cols-2 gap-16 items-start">
                         <div className="relative md:sticky md:top-32">
-                            <span className="text-[#0061FE] font-bold tracking-widest uppercase text-golden-1 mb-4 block">Our Vision</span>
-                            <h2 className="text-golden-2 md:text-golden-3 font-bold mb-8 leading-tight">
-                                <span className="text-[#FF5018]">Non-profit</span> community built by <span className="text-[#0061FE]">students</span>, for <span className="text-[#0061FE]">students</span>.
-                            </h2>
+                            <span className="text-[#00FF00] font-bold tracking-widest uppercase text-golden-1 mb-4 block drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">Our Vision</span>
+                            <motion.h2
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                className="text-golden-2 md:text-golden-3 font-bold mb-8 leading-tight"
+                            >
+                                <span className="text-[#FF5018]">Non-profit</span> community built by <span className="text-[#00FF00] drop-shadow-[0_0_8px_rgba(0,255,0,0.4)]">students</span>, for <span className="text-[#00FF00] drop-shadow-[0_0_8px_rgba(0,255,0,0.4)]">students</span>.
+                            </motion.h2>
                             <p className="text-golden-1 text-gray-600 leading-relaxed mb-8">
                                 Our vision is to bring students together to collaborate, share, and grow. We envision a platform managed by students, for students, where you can build your career based on your interests.
                             </p>
                             <div className="grid grid-cols-2 gap-8 border-t border-gray-200 pt-8">
                                 <div>
-                                    <h3 className="text-golden-3 font-bold text-[#FF0000] mb-2">2000+</h3>
+                                    <h3 className="text-golden-3 font-bold text-[#FF0000] mb-2">
+                                        <CountUpTo end={2000} suffix="+" />
+                                    </h3>
                                     <p className="text-golden-1 text-gray-500 uppercase tracking-widest">Active Members</p>
                                 </div>
                                 <div>
-                                    <h3 className="text-golden-3 font-bold text-[#FF0000] mb-2">15+</h3>
+                                    <h3 className="text-golden-3 font-bold text-[#FF0000] mb-2">
+                                        <CountUpTo end={15} suffix="+" />
+                                    </h3>
                                     <p className="text-golden-1 text-gray-500 uppercase tracking-widest">Events Hosted</p>
                                 </div>
                             </div>
@@ -781,12 +822,9 @@ const CodeSapiensHero = () => {
                         <div className="relative h-72 sm:h-80 md:h-96 w-full rounded-lg overflow-hidden shadow-lg border border-gray-200 mt-8 md:mt-0">
                             <img
                                 src="https://res.cloudinary.com/dqudvximt/image/upload/v1767535873/1760365837828_vyrmco.jpg"
-
                                 className="absolute inset-0 w-full h-full object-cover"
                             />
                         </div>
-
-
                     </div>
                 </div>
             </section>
@@ -850,11 +888,17 @@ const CodeSapiensHero = () => {
             <NoticeSection />
 
             {/* Hall of Fame */}
-            <section className="py-32 bg-[#0061FE] text-white overflow-hidden relative">
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+            <section className="py-32 bg-[#050505] text-white overflow-hidden relative border-y border-[#00FF00]/20">
+                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle, #00FF00 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="text-center mb-20">
-                        <h2 className="text-golden-2 md:text-golden-3 font-bold mb-6">Hall of Fame</h2>
+                        <motion.h2
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            className="text-golden-2 md:text-golden-3 font-bold mb-6 text-[#00FF00] drop-shadow-[0_0_12px_rgba(0,255,0,0.6)]"
+                        >
+                            Hall of Fame
+                        </motion.h2>
                         <p className="text-golden-1 text-white/80 max-w-3xl mx-auto">Celebrating the outstanding achievements of our community members.</p>
                     </div>
 
@@ -865,15 +909,15 @@ const CodeSapiensHero = () => {
                                 initial={{ opacity: 0, y: 50 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 transition={{ delay: i * 0.1 }}
-                                className="bg-white text-[#1E1919] p-1 rounded-sm shadow-xl w-full max-w-xs transform hover:-translate-y-2 transition-transform duration-300"
+                                className="bg-[#121212] border border-gray-800 text-white p-1 rounded-xl shadow-xl w-full max-w-xs transform hover:-translate-y-2 transition-all duration-300 hover:border-[#00FF00]/50 hover:shadow-[0_0_20px_rgba(0,255,0,0.2)]"
                             >
-                                <div className="h-64 overflow-hidden bg-gray-200 mb-4">
+                                <div className="h-64 overflow-hidden rounded-t-lg bg-gray-900 mb-4">
                                     <img src={entry.image_url} alt={entry.student_name} className="w-full h-full object-cover" />
                                 </div>
                                 <div className="px-6 pb-8 text-center">
-                                    <h3 className="text-golden-2 font-bold mb-2">{entry.student_name}</h3>
-                                    <div className="w-12 h-1 bg-[#0061FE] mx-auto mb-4"></div>
-                                    <p className="text-gray-600 text-golden-1 italic leading-relaxed">"{entry.description}"</p>
+                                    <h3 className="text-golden-2 font-bold mb-2 text-white">{entry.student_name}</h3>
+                                    <div className="w-12 h-1 bg-[#00FF00] mx-auto mb-4 rounded-full shadow-[0_0_8px_#00FF00]"></div>
+                                    <p className="text-gray-400 text-golden-1 italic leading-relaxed">"{entry.description}"</p>
                                 </div>
                             </motion.div>
                         ))}
@@ -885,8 +929,14 @@ const CodeSapiensHero = () => {
             <section id="community" className="py-8 md:py-16 bg-[#F7F5F2] text-[#1E1919]">
                 <div className="container mx-auto px-6">
                     <div className="text-center mb-10">
-                        <span className="text-[#0061FE] font-bold tracking-widest uppercase text-xs md:text-sm text-golden-1 mb-2 block">Community</span>
-                        <h2 className="text-2xl md:text-4xl text-golden-2 md:text-golden-3 font-bold mb-3">Core Team</h2>
+                        <span className="text-[#00FF00] font-bold tracking-widest uppercase text-xs md:text-sm text-golden-1 mb-2 block drop-shadow-[0_0_8px_rgba(0,255,0,0.5)]">Community</span>
+                        <motion.h2
+                            initial={{ opacity: 0, y: 15 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            className="text-2xl md:text-4xl text-golden-2 md:text-golden-3 font-bold mb-3"
+                        >
+                            Core Team
+                        </motion.h2>
                         <p className="text-golden-1 text-gray-600 text-sm md:text-base max-w-2xl mx-auto">
                             Meet the core members who run the community. We are students, just like you.
                         </p>
@@ -894,12 +944,58 @@ const CodeSapiensHero = () => {
 
                     {/* Founder */}
                     <div className="flex flex-col items-center mb-12">
-                        <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mb-3 border-4 border-[#FA5D00] shadow-lg hover:scale-105 transition-transform">
-                            <img src="https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/1679197646322_n1svjq_s5w42a.jpg" alt="Thiyaga B" className="w-full h-full object-cover" />
+                        <a
+                            href="https://www.linkedin.com/in/thiyagab/"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="flex flex-col items-center group cursor-pointer"
+                        >
+                            <div className="w-20 h-20 md:w-24 md:h-24 rounded-full overflow-hidden mb-3 border-4 border-[#FA5D00] shadow-lg group-hover:scale-105 transition-transform">
+                                <img src="https://res.cloudinary.com/druvxcll9/image/upload/v1761122517/1679197646322_n1svjq_s5w42a.jpg" alt="Thiyaga B" className="w-full h-full object-cover" />
+                            </div>
+                            <h3 className="font-bold text-golden-2 mb-0.5 text-sm md:text-base group-hover:text-[#00FF00] transition-colors">Thiyaga B</h3>
+                            <p className="text-[#FA5D00] text-golden-1 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-1">Founder</p>
+                            <span className="text-gray-400 group-hover:text-[#00FF00] transition-colors"><Linkedin size={14} /></span>
+                        </a>
+                    </div>
+
+                    {/* Current Team */}
+                    <div className="border-t border-gray-300/60 pt-10 mb-12">
+                        <div className="flex flex-col md:flex-row items-start gap-6 md:gap-8">
+                            {/* Left Header */}
+                            <div className="md:w-1/4 text-left">
+                                <h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Current Team</h3>
+                                <p className="text-xs md:text-sm text-gray-500 mt-1">Organizers & active leaders driving community initiatives.</p>
+                            </div>
+
+                            {/* Right Grid */}
+                            <div className="md:w-3/4 w-full">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-y-6 gap-x-2 md:gap-x-4">
+                                    {currentTeam.map((member, i) => (
+                                        <motion.a
+                                            key={i}
+                                            href={member.link}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            whileInView={{ opacity: 1, scale: 1 }}
+                                            transition={{ delay: i * 0.05 }}
+                                            className="flex flex-col items-center group text-center cursor-pointer"
+                                        >
+                                            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden mb-2 border-2 border-transparent group-hover:border-[#00FF00] shadow-md group-hover:scale-105 transition-all duration-300">
+                                                <img src={member.photo} alt={member.name} className="w-full h-full object-cover" />
+                                            </div>
+                                            <h3 className="font-bold text-golden-1 mb-0.5 text-xs md:text-sm group-hover:text-[#00FF00] transition-colors">{member.name}</h3>
+                                            {member.link && (
+                                                <span className="text-gray-400 group-hover:text-[#00FF00] transition-colors mt-1">
+                                                    <Linkedin size={12} />
+                                                </span>
+                                            )}
+                                        </motion.a>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                        <h3 className="font-bold text-golden-2 mb-0.5 text-sm md:text-base">Thiyaga B</h3>
-                        <p className="text-[#FA5D00] text-golden-1 font-bold uppercase tracking-widest text-[10px] md:text-xs mb-1">Founder</p>
-                        <a href="https://www.linkedin.com/in/thiyagab/" target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0061FE] transition-colors"><Linkedin size={14} /></a>
                     </div>
 
                     {/* Previous Team */}
@@ -915,23 +1011,26 @@ const CodeSapiensHero = () => {
                             <div className="md:w-3/4 w-full">
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-y-6 gap-x-2 md:gap-x-4">
                                     {volunteers.map((vol, i) => (
-                                        <motion.div
+                                        <motion.a
                                             key={i}
+                                            href={vol.link || '#'}
+                                            target="_blank"
+                                            rel="noreferrer"
                                             initial={{ opacity: 0, scale: 0.8 }}
                                             whileInView={{ opacity: 1, scale: 1 }}
                                             transition={{ delay: i * 0.05 }}
-                                            className="flex flex-col items-center group text-center"
+                                            className="flex flex-col items-center group text-center cursor-pointer"
                                         >
-                                            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden mb-2 grayscale group-hover:grayscale-0 transition-all duration-500 border-2 border-transparent group-hover:border-[#0061FE] shadow-md">
+                                            <div className="w-16 h-16 md:w-20 md:h-20 rounded-full overflow-hidden mb-2 grayscale group-hover:grayscale-0 transition-all duration-500 border-2 border-transparent group-hover:border-[#00FF00] shadow-md">
                                                 <img src={vol.photo} alt={vol.name} className="w-full h-full object-cover" />
                                             </div>
-                                            <h3 className="font-bold text-golden-1 mb-0.5 text-xs md:text-sm">{vol.name}</h3>
+                                            <h3 className="font-bold text-golden-1 mb-0.5 text-xs md:text-sm group-hover:text-[#00FF00] transition-colors">{vol.name}</h3>
                                             {vol.link && (
-                                                <a href={vol.link} target="_blank" rel="noreferrer" className="text-gray-400 hover:text-[#0061FE] transition-colors mt-1">
+                                                <span className="text-gray-400 group-hover:text-[#00FF00] transition-colors mt-1">
                                                     <Linkedin size={12} />
-                                                </a>
+                                                </span>
                                             )}
-                                        </motion.div>
+                                        </motion.a>
                                     ))}
                                 </div>
                             </div>
@@ -945,7 +1044,7 @@ const CodeSapiensHero = () => {
                 <div className="container mx-auto px-6 text-center">
                     <h2 className="text-golden-2 md:text-golden-3 font-black text-white tracking-tighter uppercase leading-none">
                         Building Community <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0061FE] to-[#00C6F7]">Since 2023</span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00FF00] to-[#00F0FF] drop-shadow-[0_0_15px_rgba(0,255,0,0.5)]">Since 2023</span>
                     </h2>
                 </div>
             </section>
@@ -963,20 +1062,20 @@ const CodeSapiensHero = () => {
                                 Empowering students to build, learn, and grow together. Join the biggest student tech community in Tamil Nadu.
                             </p>
                             <div className="flex gap-6">
-                                <a href="https://github.com/Codesapiens-in" className="text-gray-400 hover:text-white transition-colors"><Github size={20} /></a>
-                                <a href="https://www.linkedin.com/company/codesapiens-community/posts/" className="text-gray-400 hover:text-white transition-colors"><Linkedin size={20} /></a>
-                                <a href="https://youtube.com/@codesapiens-in?si=90EaPMYHcSZIHtMi" className="text-gray-400 hover:text-white transition-colors"><Youtube size={20} /></a>
-                                <a href="https://discord.gg/codesapiens" className="text-gray-400 hover:text-white transition-colors"><Users size={20} /></a>
+                                <a href="https://github.com/Codesapiens-in" className="text-gray-400 hover:text-[#00FF00] transition-colors"><Github size={20} /></a>
+                                <a href="https://www.linkedin.com/company/codesapiens-community/posts/" className="text-gray-400 hover:text-[#00FF00] transition-colors"><Linkedin size={20} /></a>
+                                <a href="https://youtube.com/@codesapiens-in?si=90EaPMYHcSZIHtMi" className="text-gray-400 hover:text-[#00FF00] transition-colors"><Youtube size={20} /></a>
+                                <a href="https://discord.gg/codesapiens" className="text-gray-400 hover:text-[#00FF00] transition-colors"><Users size={20} /></a>
                             </div>
                         </div>
                         <div className="grid grid-cols-1 gap-16">
                             <div>
                                 <h4 className="text-white font-bold mb-6">Community</h4>
                                 <ul className="space-y-4 text-golden-1">
-                                    <li><a href="#vision" className="hover:text-[#0061FE] transition-colors">About Us</a></li>
-                                    <li><a href="#events" className="hover:text-[#0061FE] transition-colors">Events</a></li>
-                                    <li><a href="#community" className="hover:text-[#0061FE] transition-colors">Team</a></li>
-                                    <li><a href="#" className="hover:text-[#0061FE] transition-colors">Join Discord</a></li>
+                                    <li><a href="#vision" className="hover:text-[#00FF00] transition-colors">About Us</a></li>
+                                    <li><a href="#events" className="hover:text-[#00FF00] transition-colors">Events</a></li>
+                                    <li><a href="#community" className="hover:text-[#00FF00] transition-colors">Team</a></li>
+                                    <li><a href="#" className="hover:text-[#00FF00] transition-colors">Join Discord</a></li>
                                 </ul>
                             </div>
                         </div>
